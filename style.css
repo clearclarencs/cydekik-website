@@ -109,7 +109,8 @@ nav{
 }
 
 .purchaseButton:hover{
-    color:rgb(197, 197, 197);
+    color: #4D5751;
+    transition: 0.5s;
 }
 
 #features{
@@ -163,4 +164,9 @@ nav{
     height: 400px;
     margin-bottom: 10px;
     text-align: center;
+}
+
+.featureIcon{
+    width: 200px;
+    margin-top: 30px;
 }
