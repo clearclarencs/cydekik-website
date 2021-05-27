@@ -103,6 +103,8 @@
 
                 }
             await new Promise(resolve => setTimeout(resolve, 500));
+            document.getElementById("loaderText").innerHTML = staticText+titleText+"<br>Welcome!";
+            await new Promise(resolve => setTimeout(resolve, 500));
             showPage()
             };
 
