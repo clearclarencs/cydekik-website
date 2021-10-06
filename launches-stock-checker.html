@@ -38,7 +38,7 @@
                             select.options[i] = null;
                         }
                         var opt = document.createElement('option'); // add select option
-                        if (slicington[sliceNum] == name){
+                        if (slicington[sliceNum] == name && !(document.getElementById("stockcheck-select-"+names[names.indexOf(slicington[sliceNum])-1]).value == "None")){
                             opt.innerHTML = "Select";
                         }else{
                             opt.innerHTML = "None";
@@ -155,7 +155,7 @@
             </script>
             <div class="stockcheck-div">
                 <select class="stockcheck-select" id="stockcheck-select-store" onchange="release()">
-                    <option value="None" class="select-option">None</option>
+                    <option value="None" class="select-option">Select</option>
                 </select>
             </div>
             <div class="stockcheck-div">

@@ -9,8 +9,7 @@
     <meta name="theme-color" content="#1DA1F2">
 </head>
 <body onload="myFunction()" style="margin:0;">
-    <div id="loader"><h1 id="loaderText">Authenticating</h1></div>
-    <div style="display:none;" id="myDiv" class="animate-bottom">
+    <div style="display:block;" id="myDiv" class="animate-bottom">
         <header>
             <div class="top">
                 <nav>
@@ -89,27 +88,4 @@
             <h3 class="footerText" id="copyright">Copyright © 2021 Cydekik. All Rights Reserved.</h3>
         </footer>
     </div>
-    <script>
-        var myVar;
-        async function myFunction () {
-            let staticText = "Authenticating"
-            let titleText = "..."
-            let soFar = ""
-            for (letter in titleText) {
-                await new Promise(resolve => setTimeout(resolve, 300));
-                soFar += titleText[letter]
-                document.getElementById("loaderText").innerHTML = staticText+soFar;
-
-                }
-            await new Promise(resolve => setTimeout(resolve, 500));
-            document.getElementById("loaderText").innerHTML = staticText+titleText+"<br>Welcome!";
-            await new Promise(resolve => setTimeout(resolve, 500));
-            showPage()
-            };
-
-        function showPage() {
-          document.getElementById("loader").style.display = "none";
-          document.getElementById("myDiv").style.display = "block";
-        }
-    </script>
 </body>
