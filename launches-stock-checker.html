@@ -28,6 +28,26 @@
         </section>
         <section>
             <script>
+                function wipeSelects(name){
+                    names = ["store", "release", "model", "location"]
+                    slicington = names.slice(names.indexOf(name))
+                    document.getElementById("stock-numbers").innerHTML = ""
+                    for (sliceNum in slicington){
+                        var select = document.getElementById("stockcheck-select-"+slicington[sliceNum])
+                        for (i = select.options.length-1; i >= 0; i--) { // Clear old options
+                            select.options[i] = null;
+                        }
+                        var opt = document.createElement('option'); // add select option
+                        if (slicington[sliceNum] == name){
+                            opt.innerHTML = "Select";
+                        }else{
+                            opt.innerHTML = "None";
+                        }
+                        opt.className = "select-option";
+                        opt.value =  "None"
+                        select.appendChild(opt);
+                    }
+                }
                 firebase.initializeApp({
                     apiKey: "AIzaSyBWxTkGvBnx7rANQvpW-5YRcte5qu3c-xo",
                     authDomain: "launches-by-seed.firebaseapp.com",
@@ -42,12 +62,6 @@
                 function main(){
                     db.collection("campaigns").orderBy("start_date", "desc").limit(loadNumber).get().then((querySnapshot) => {
                         var storeSelect = document.getElementById("stockcheck-select-store")
-                        for (i = storeSelect.options.length-1; i >= 0; i--) { // Clear old options
-                            storeSelect.options[i] = null;}
-                        var opt = document.createElement('option'); // add select option
-                        opt.innerHTML = "Select";
-                        opt.className = "select-option";
-                        storeSelect.appendChild(opt);
                         var stores = []
                         querySnapshot.forEach((doc) => {
                             var data = doc.data()
@@ -64,15 +78,12 @@
                 }
 
                 function release(){
+                    wipeSelects("release");
+                    if (document.getElementById("stockcheck-select-store").value == "None"){
+                        return
+                    }
                     db.collection("campaigns").orderBy("start_date", "desc").limit(loadNumber).get().then((querySnapshot) => {
                     var releaseSelect = document.getElementById("stockcheck-select-release")
-                    for (i = releaseSelect.options.length-1; i >= 0; i--) {
-                        releaseSelect.options[i] = null;
-                    }
-                    var opt = document.createElement('option'); // add select option
-                    opt.innerHTML = "Select";
-                    opt.className = "select-option";
-                    releaseSelect.appendChild(opt);
                     querySnapshot.forEach((doc) => {
                         var data = doc.data()
                         if (data.site == document.getElementById("stockcheck-select-store").value){
@@ -87,15 +98,12 @@
                 }
 
                 function model(){
+                    wipeSelects("model");
+                    if (document.getElementById("stockcheck-select-release").value == "None"){
+                        return
+                    }
                     db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").orderBy("name").get().then((querySnapshot) => {
                     var modelSelect = document.getElementById("stockcheck-select-model")
-                    for (i = modelSelect.options.length-1; i >= 0; i--) { // Clear old options
-                        modelSelect.options[i] = null;
-                    }
-                    var opt = document.createElement('option'); // add select option
-                    opt.innerHTML = "Select";
-                    opt.className = "select-option";
-                    modelSelect.appendChild(opt);
                     querySnapshot.forEach((doc) => {
                         var data = doc.data()
                         var opt = document.createElement('option');
@@ -108,15 +116,12 @@
                 }
 
                 function locations(){
+                    wipeSelects("location");
+                    if (document.getElementById("stockcheck-select-model").value == "None"){
+                        return
+                    }
                     db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").doc(document.getElementById("stockcheck-select-model").value).collection("locations").orderBy("locationName").get().then((querySnapshot) => {
                     var locationSelect = document.getElementById("stockcheck-select-location")
-                    for (i = locationSelect.options.length-1; i >= 0; i--) { // Clear old options
-                        locationSelect.options[i] = null;
-                    }
-                    var opt = document.createElement('option'); // add select option
-                    opt.innerHTML = "Select";
-                    opt.className = "select-option";
-                    locationSelect.appendChild(opt);
                     querySnapshot.forEach((doc) => {
                         var data = doc.data()
                         var opt = document.createElement('option');
@@ -129,13 +134,17 @@
                 }
 
                 function stockNumbers(){
+                    if (document.getElementById("stockcheck-select-location").value == "None"){
+                        document.getElementById("stock-numbers").innerHTML = ""
+                        return
+                    }
                     db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").doc(document.getElementById("stockcheck-select-model").value).collection("locations").doc(document.getElementById("stockcheck-select-location").value).collection("sizes").orderBy("sizeOrder").get().then((querySnapshot) => {
                     var stock = []
                     var totalStock = 0
                     querySnapshot.forEach((doc) => {
                         var data = doc.data()
                         stock.push(String(data.size)+" - "+String(data.inventory))
-                        totalStock += data.inventory
+                        totalStock += Number(data.inventory)
                         });
                     stock.push("Total - "+String(totalStock))
                     document.getElementById("stock-numbers").innerHTML = stock.join("<br>")
