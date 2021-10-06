@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<head>
+    <link rel="icon" href="Images/cydekik.jpg">
+    <title>Cydekik Launches Stock Checker</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta content="https://cydekik.com/Images/cydekik.jpg" property="og:image" data-rh="true">
+    <meta content="Cydekik Launches Stock Checker" property="og:title" data-rh="true">
+    <meta content="Making raffle botting easy. Cydekik has an array of raffle botting tools so you can focus on whats important." property="og:description" data-rh="true">
+    <meta name="theme-color" content="#1DA1F2">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+</head>
+<body onload="main()" style="margin:0;">
+    <div style="display:block;" id="myDiv" class="animate-bottom">
+        <header>
+            <div class="top">
+                <nav>
+                    <h1 class="title">Cydekik Raffle Toolbox</h1>
+                </nav>
+            </div>
+        </header>
+        <section id="home">
+            <div id="homeTextDiv">
+                <h2 class="heading1">Launches stock checker</h2>
+                <p class="faqP">Provided by Cydekik. Need help perfecting your setup and cooking raffles? Check out Cydekik <a href="/">here</a>.</p>
+            </div>
+        </section>
+        <section>
+            <script>
+                firebase.initializeApp({
+                    apiKey: "AIzaSyBWxTkGvBnx7rANQvpW-5YRcte5qu3c-xo",
+                    authDomain: "launches-by-seed.firebaseapp.com",
+                    databaseURL: "https://launches-by-seed.firebaseio.com",
+                    projectId: "launches-by-seed",
+                    storageBucket: "launches-by-seed.appspot.com",
+                    messagingSenderId: "1009014904011",
+                    appId: "1:1009014904011:web:6722d41e736834ae7a774e"
+                });
+                loadNumber = 30
+                var db = firebase.firestore()
+                function main(){
+                    db.collection("campaigns").orderBy("start_date", "desc").limit(loadNumber).get().then((querySnapshot) => {
+                        var storeSelect = document.getElementById("stockcheck-select-store")
+                        for (i = storeSelect.options.length-1; i >= 0; i--) { // Clear old options
+                            storeSelect.options[i] = null;}
+                        var opt = document.createElement('option'); // add select option
+                        opt.innerHTML = "Select";
+                        opt.className = "select-option";
+                        storeSelect.appendChild(opt);
+                        var stores = []
+                        querySnapshot.forEach((doc) => {
+                            var data = doc.data()
+                            if (!stores.includes(data.site.replace(".myshopify.com",""))){
+                                var opt = document.createElement('option');
+                                opt.value = data.site;
+                                opt.innerHTML = data.site.replace(".myshopify.com","");
+                                opt.className = "select-option";
+                                storeSelect.appendChild(opt);
+                                stores.push(data.site.replace(".myshopify.com",""));
+                            }
+                        });
+                    });
+                }
+
+                function release(){
+                    db.collection("campaigns").orderBy("start_date", "desc").limit(loadNumber).get().then((querySnapshot) => {
+                    var releaseSelect = document.getElementById("stockcheck-select-release")
+                    for (i = releaseSelect.options.length-1; i >= 0; i--) {
+                        releaseSelect.options[i] = null;
+                    }
+                    var opt = document.createElement('option'); // add select option
+                    opt.innerHTML = "Select";
+                    opt.className = "select-option";
+                    releaseSelect.appendChild(opt);
+                    querySnapshot.forEach((doc) => {
+                        var data = doc.data()
+                        if (data.site == document.getElementById("stockcheck-select-store").value){
+                            var opt = document.createElement('option');
+                            opt.value = data.campaign_id;
+                            opt.innerHTML = data.campaign_name;
+                            opt.className = "select-option";
+                            releaseSelect.appendChild(opt);
+                            }
+                        });
+                    })
+                }
+
+                function model(){
+                    db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").orderBy("name").get().then((querySnapshot) => {
+                    var modelSelect = document.getElementById("stockcheck-select-model")
+                    for (i = modelSelect.options.length-1; i >= 0; i--) { // Clear old options
+                        modelSelect.options[i] = null;
+                    }
+                    var opt = document.createElement('option'); // add select option
+                    opt.innerHTML = "Select";
+                    opt.className = "select-option";
+                    modelSelect.appendChild(opt);
+                    querySnapshot.forEach((doc) => {
+                        var data = doc.data()
+                        var opt = document.createElement('option');
+                        opt.value = doc.id;
+                        opt.innerHTML = data.name;
+                        opt.className = "select-option";
+                        modelSelect.appendChild(opt);
+                        });
+                    })
+                }
+
+                function locations(){
+                    db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").doc(document.getElementById("stockcheck-select-model").value).collection("locations").orderBy("locationName").get().then((querySnapshot) => {
+                    var locationSelect = document.getElementById("stockcheck-select-location")
+                    for (i = locationSelect.options.length-1; i >= 0; i--) { // Clear old options
+                        locationSelect.options[i] = null;
+                    }
+                    var opt = document.createElement('option'); // add select option
+                    opt.innerHTML = "Select";
+                    opt.className = "select-option";
+                    locationSelect.appendChild(opt);
+                    querySnapshot.forEach((doc) => {
+                        var data = doc.data()
+                        var opt = document.createElement('option');
+                        opt.value = doc.id;
+                        opt.innerHTML = data.locationName;
+                        opt.className = "select-option";
+                        locationSelect.appendChild(opt);
+                        });
+                    })
+                }
+
+                function stockNumbers(){
+                    db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").doc(document.getElementById("stockcheck-select-model").value).collection("locations").doc(document.getElementById("stockcheck-select-location").value).collection("sizes").orderBy("sizeOrder").get().then((querySnapshot) => {
+                    var stock = []
+                    var totalStock = 0
+                    querySnapshot.forEach((doc) => {
+                        var data = doc.data()
+                        stock.push(String(data.size)+" - "+String(data.inventory))
+                        totalStock += data.inventory
+                        });
+                    stock.push("Total - "+String(totalStock))
+                    document.getElementById("stock-numbers").innerHTML = stock.join("<br>")
+                    })
+                }
+
+
+            </script>
+            <div class="stockcheck-div">
+                <select class="stockcheck-select" id="stockcheck-select-store" onchange="release()">
+                    <option value="None" class="select-option">None</option>
+                </select>
+            </div>
+            <div class="stockcheck-div">
+                <select class="stockcheck-select" id="stockcheck-select-release" onchange="model()">
+                    <option value="None" class="select-option">None</option>
+                </select>
+            </div>
+            <div class="stockcheck-div">
+                <select class="stockcheck-select" id="stockcheck-select-model" onchange="locations()">
+                    <option value="None" class="select-option">None</option>
+                </select>
+            </div>
+            <div class="stockcheck-div">
+                <select class="stockcheck-select" id="stockcheck-select-location" onchange="stockNumbers()">
+                    <option value="None" class="select-option">None</option>
+                </select>
+            </div>
+            <section id="stock-grid">
+                <h2 id="stock-numbers"></h2>
+            </section>
+            <p id="disclaimer">Some retailers load stock right before they draw. This can still be useful to see stock for previous releases.</p>
+        </section>
+        <footer>
+            <a class="footerText" id="TandC" href="/terms-and-conditions">Terms & Conditions</a>
+            <a class="footerText" id="email" href="mailto:support@cydekik.com">support@cydekik.com</a>
+            <a class="footerText" id="pp" href="privacy-policy">Privacy Policy</a>
+            <h3 class="footerText" id="copyright">Copyright © 2021 Cydekik. All Rights Reserved.</h3>
+        </footer>
+    </div>
+</body>
