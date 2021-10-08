@@ -57,7 +57,12 @@
                     messagingSenderId: "1009014904011",
                     appId: "1:1009014904011:web:6722d41e736834ae7a774e"
                 });
-                loadNumber = 30
+                var urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('load')){
+                    loadNumber = Number(urlParams.get('load'))
+                }else{
+                    loadNumber = 30
+                }
                 var db = firebase.firestore()
                 function main(){
                     db.collection("campaigns").orderBy("start_date", "desc").limit(loadNumber).get().then((querySnapshot) => {
