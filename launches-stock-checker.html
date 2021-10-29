@@ -107,6 +107,7 @@
                     if (document.getElementById("stockcheck-select-release").value == "None"){
                         return
                     }
+                    db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).get().then((querySnapshot) => {console.log(querySnapshot.data())})
                     db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").orderBy("name").get().then((querySnapshot) => {
                     var modelSelect = document.getElementById("stockcheck-select-model")
                     querySnapshot.forEach((doc) => {
@@ -143,6 +144,7 @@
                         document.getElementById("stock-numbers").innerHTML = ""
                         return
                     }
+                    // db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").doc(document.getElementById("stockcheck-select-model").value).collection("locations").doc(document.getElementById("stockcheck-select-location").value).get().then((querySnapshot) => {console.log(querySnapshot.data())})
                     db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").doc(document.getElementById("stockcheck-select-model").value).collection("locations").doc(document.getElementById("stockcheck-select-location").value).collection("sizes").orderBy("sizeOrder").get().then((querySnapshot) => {
                     var stock = []
                     var totalStock = 0
