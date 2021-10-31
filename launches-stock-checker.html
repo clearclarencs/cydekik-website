@@ -107,7 +107,26 @@
                     if (document.getElementById("stockcheck-select-release").value == "None"){
                         return
                     }
-                    db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).get().then((querySnapshot) => {console.log(querySnapshot.data())})
+                    db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).get().then((querySnapshot) => {
+                        data = querySnapshot.data()
+                        console.log(data)
+                        var stock = []
+                        const dateTimeFormat = new Intl.DateTimeFormat('en', {
+                            year: 'numeric',
+                            month: 'numeric',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                        });
+                        stock.push("Opens: "+dateTimeFormat.format(new Date(data.start_date)))
+                        stock.push("Closes: "+dateTimeFormat.format(new Date(data.end_date)))
+                        if (data.removeCustomerLogin){
+                            stock.push("Login: "+"No")
+                        } else{
+                            stock.push("Login: "+"Yes")
+                        }
+                        document.getElementById("info").innerHTML = stock.join("<br>")
+                        })
                     db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").orderBy("name").get().then((querySnapshot) => {
                     var modelSelect = document.getElementById("stockcheck-select-model")
                     querySnapshot.forEach((doc) => {
@@ -146,7 +165,7 @@
                     }
                     // db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").doc(document.getElementById("stockcheck-select-model").value).collection("locations").doc(document.getElementById("stockcheck-select-location").value).get().then((querySnapshot) => {console.log(querySnapshot.data())})
                     db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).collection("models").doc(document.getElementById("stockcheck-select-model").value).collection("locations").doc(document.getElementById("stockcheck-select-location").value).collection("sizes").orderBy("sizeOrder").get().then((querySnapshot) => {
-                    var stock = []
+                    var stock = ["Stock:"]
                     var totalStock = 0
                     querySnapshot.forEach((doc) => {
                         var data = doc.data()
@@ -181,6 +200,7 @@
                 </select>
             </div>
             <section id="stock-grid">
+                <h2 id="info"></h2>
                 <h2 id="stock-numbers"></h2>
             </section>
             <p id="disclaimer">Some retailers load stock towards the end / right before they draw. This can still be useful to see stock for previous releases.</p>
