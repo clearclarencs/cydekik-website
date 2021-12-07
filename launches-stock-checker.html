@@ -108,6 +108,7 @@
                         return
                     }
                     db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).get().then((querySnapshot) => {
+                        var readable_boolean = {false: "No", true: "Yes"}
                         data = querySnapshot.data()
                         console.log(data)
                         var stock = []
@@ -120,10 +121,10 @@
                         });
                         stock.push("Opens: "+dateTimeFormat.format(new Date(data.start_date)))
                         stock.push("Closes: "+dateTimeFormat.format(new Date(data.end_date)))
-                        if (data.removeCustomerLogin){
-                            stock.push("Login: "+"No")
-                        } else{
-                            stock.push("Login: "+"Yes")
+                        stock.push("Login: "+readable_boolean[! data.removeCustomerLogin])
+                        stock.push("Hacaptcha: "+readable_boolean[data.captchaSubmit])
+                        if (data.showCustomerMessage){
+                            stock.push("Question: "+data.customerMessageLabel)
                         }
                         document.getElementById("info").innerHTML = stock.join("<br>")
                         })
