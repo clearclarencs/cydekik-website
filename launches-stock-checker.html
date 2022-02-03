@@ -69,15 +69,17 @@
                         var storeSelect = document.getElementById("stockcheck-select-store")
                         var stores = []
                         querySnapshot.forEach((doc) => {
-                            var data = doc.data()
-                            if (!stores.includes(data.site.replace(".myshopify.com",""))){
-                                var opt = document.createElement('option');
-                                opt.value = data.site;
-                                opt.innerHTML = data.site.replace(".myshopify.com","");
-                                opt.className = "select-option";
-                                storeSelect.appendChild(opt);
-                                stores.push(data.site.replace(".myshopify.com",""));
-                            }
+                            try{
+                                var data = doc.data()
+                                if (!stores.includes(data.site.replace(".myshopify.com",""))){
+                                    var opt = document.createElement('option');
+                                    opt.value = data.site;
+                                    opt.innerHTML = data.site.replace(".myshopify.com","");
+                                    opt.className = "select-option";
+                                    storeSelect.appendChild(opt);
+                                    stores.push(data.site.replace(".myshopify.com",""));
+                                }
+                            }catch{}
                         });
                     });
                 }
