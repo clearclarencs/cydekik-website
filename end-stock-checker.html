@@ -34,7 +34,7 @@
                     document.getElementById("stock-numbers").innerHTML = "Loading..."
                     index.search(document.getElementById("stockcheck-sku").value).then((query) => {
                         console.log(query.hits)
-                        if (!(query.hits[0].sku == document.getElementById("stockcheck-sku").value)) {
+                        if (!(query.hits[0].sku.toUpperCase() === document.getElementById("stockcheck-sku").value.toUpperCase())) {
                             document.getElementById("stock-numbers").innerHTML = "Couldn't find stock of product"
                             return
                         }
