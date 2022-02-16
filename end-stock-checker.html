@@ -31,6 +31,7 @@
                 const client = algoliasearch('KO4W2GBINK', 'dfa5df098f8d677dd2105ece472a44f8');
                 const index = client.initIndex('catalog_products_launches_en');
                 function stockNumbers(){
+                    document.getElementById("stock-numbers").innerHTML = "Loading..."
                     index.search(document.getElementById("stockcheck-sku").value).then((query) => {
                         if (!(query.hits[0].sku == document.getElementById("stockcheck-sku").value)) {
                             document.getElementById("stock-numbers").innerHTML = "Couldn't find stock of product"
