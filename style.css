@@ -5,6 +5,7 @@
     font-family: 'Montserrat', sans-serif;
     color: white;
     font-size: 30px;
+    letter-spacing: 1px;
 }
 
 body{
@@ -159,14 +160,14 @@ a{
 }
 
 .purchaseButton{
-    font-size: 40px;
-    margin-top: 50px;
+    font-size: 30px;
     box-shadow: 1px 1px 10px 10px #0000008e;
+    margin-bottom: 10px;
 }
 
 .purchaseButton:hover{
     color: #4D5751;
-    transition: 0.5s;
+    transition: 0.1s;
 }
 
 #features{
@@ -223,6 +224,28 @@ a{
     margin-bottom: 10px;
     text-align: center;
     box-shadow: 0.2px 0.2px 2px 2px #00000059;
+}
+
+.subscription{
+    background-color: rgba(20, 20, 20, 0.8);
+	border: 1px solid #141414;
+    -webkit-column-break-inside: avoid;
+	-moz-column-break-inside: avoid;
+	column-break-inside: avoid;
+	padding: 15px;
+    border-radius: 10px;
+    width: 250px;
+    height: 250px;
+    text-align: center;
+    box-shadow: 0.2px 0.2px 2px 2px #00000059;
+    margin: 0px 1px;
+    margin-bottom: 50px;
+}
+
+.sub-component{
+    margin: 0px 20px;
+    margin-top: 15px;
+    margin-bottom: 30px;
 }
 
 .featureIcon{
