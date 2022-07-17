@@ -111,7 +111,7 @@
                     }
                     db.collection("campaigns").doc(document.getElementById("stockcheck-select-release").value).get().then((querySnapshot) => {
                         var readable_boolean = {false: "No", true: "Yes"}
-                        data = querySnapshot.data()
+                        var data = querySnapshot.data()
                         console.log(data)
                         var stock = []
                         const dateTimeFormat = new Intl.DateTimeFormat('en', {
@@ -121,10 +121,28 @@
                             hour: 'numeric',
                             minute: 'numeric',
                         });
+
+                        data = Object.assign({}, 
+                            {
+                                "removeCustomerLogin": false, 
+                                "captchaSubmit": false
+                            }, 
+                            data
+                        )
+                        if (data.countriesAllowed == ""){
+                            data.countriesAllowed = "All"
+                        }
+                        if (data.provincesAllowed == ""){
+                            data.provincesAllowed = "All"
+                        }
+
+
                         stock.push("Opens: "+dateTimeFormat.format(new Date(data.start_date)))
                         stock.push("Closes: "+dateTimeFormat.format(new Date(data.end_date)))
                         stock.push("Login: "+readable_boolean[! data.removeCustomerLogin])
                         stock.push("Hcaptcha: "+readable_boolean[data.captchaSubmit])
+                        stock.push("Countries allowed: "+data.countriesAllowed)
+                        stock.push("Regions allowed: "+data.provincesAllowed)
                         if (data.showCustomerMessage){
                             stock.push("Question: "+data.customerMessageLabel)
                         }
@@ -212,7 +230,7 @@
             <a class="footerText" id="TandC" href="/terms-and-conditions">Terms & Conditions</a>
             <a class="footerText" id="email" href="mailto:support@cydekik.com">support@cydekik.com</a>
             <a class="footerText" id="pp" href="privacy-policy">Privacy Policy</a>
-            <h3 class="footerText" id="copyright">Copyright © 2022 Cydekik. All Rights Reserved.</h3>
+            <h3 class="footerText" id="copyright">Copyright © 2021 Cydekik. All Rights Reserved.</h3>
         </footer>
     </div>
 </body>
